@@ -4,7 +4,7 @@ if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS 2.6)
    message(FATAL_ERROR "CMake >= 2.6.0 required")
 endif()
 cmake_policy(PUSH)
-cmake_policy(VERSION 2.6...3.20)
+cmake_policy(VERSION 2.6...3.21)
 #----------------------------------------------------------------
 # Generated CMake target import file.
 #----------------------------------------------------------------
@@ -57,7 +57,7 @@ add_library(LLVMDemangle STATIC IMPORTED)
 add_library(LLVMSupport STATIC IMPORTED)
 
 set_target_properties(LLVMSupport PROPERTIES
-  INTERFACE_LINK_LIBRARIES "rt;dl;m;ZLIB::ZLIB;LLVMDemangle"
+  INTERFACE_LINK_LIBRARIES "rt;dl;-lpthread;m;ZLIB::ZLIB;LLVMDemangle"
 )
 
 # Create imported target LLVMTableGen
@@ -81,7 +81,7 @@ add_executable(llvm-tblgen IMPORTED)
 add_library(LLVMCore STATIC IMPORTED)
 
 set_target_properties(LLVMCore PROPERTIES
-  INTERFACE_LINK_LIBRARIES "LLVMBinaryFormat;LLVMRemarks;LLVMSupport"
+  INTERFACE_LINK_LIBRARIES "-lpthread;LLVMBinaryFormat;LLVMRemarks;LLVMSupport"
 )
 
 # Create imported target LLVMFuzzMutate
@@ -116,7 +116,7 @@ set_target_properties(LLVMIRReader PROPERTIES
 add_library(LLVMCodeGen STATIC IMPORTED)
 
 set_target_properties(LLVMCodeGen PROPERTIES
-  INTERFACE_LINK_LIBRARIES "LLVMAnalysis;LLVMBitReader;LLVMBitWriter;LLVMCore;LLVMMC;LLVMProfileData;LLVMScalarOpts;LLVMSupport;LLVMTarget;LLVMTransformUtils"
+  INTERFACE_LINK_LIBRARIES "-lpthread;LLVMAnalysis;LLVMBitReader;LLVMBitWriter;LLVMCore;LLVMMC;LLVMProfileData;LLVMScalarOpts;LLVMSupport;LLVMTarget;LLVMTransformUtils"
 )
 
 # Create imported target LLVMSelectionDAG
@@ -438,21 +438,21 @@ set_target_properties(LLVMMCJIT PROPERTIES
 add_library(LLVMOrcJIT STATIC IMPORTED)
 
 set_target_properties(LLVMOrcJIT PROPERTIES
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:LLVMAnalysis>;\$<LINK_ONLY:LLVMBitReader>;\$<LINK_ONLY:LLVMBitWriter>;\$<LINK_ONLY:LLVMPasses>;LLVMCore;LLVMExecutionEngine;LLVMJITLink;LLVMObject;LLVMOrcShared;LLVMOrcTargetProcess;LLVMMC;LLVMMCDisassembler;LLVMPasses;LLVMRuntimeDyld;LLVMSupport;LLVMTarget;LLVMTransformUtils"
+  INTERFACE_LINK_LIBRARIES "-lpthread;\$<LINK_ONLY:LLVMAnalysis>;\$<LINK_ONLY:LLVMBitReader>;\$<LINK_ONLY:LLVMBitWriter>;\$<LINK_ONLY:LLVMPasses>;LLVMCore;LLVMExecutionEngine;LLVMJITLink;LLVMObject;LLVMOrcShared;LLVMOrcTargetProcess;LLVMMC;LLVMMCDisassembler;LLVMPasses;LLVMRuntimeDyld;LLVMSupport;LLVMTarget;LLVMTransformUtils"
 )
 
 # Create imported target LLVMOrcShared
 add_library(LLVMOrcShared STATIC IMPORTED)
 
 set_target_properties(LLVMOrcShared PROPERTIES
-  INTERFACE_LINK_LIBRARIES "LLVMSupport"
+  INTERFACE_LINK_LIBRARIES "-lpthread;LLVMSupport"
 )
 
 # Create imported target LLVMOrcTargetProcess
 add_library(LLVMOrcTargetProcess STATIC IMPORTED)
 
 set_target_properties(LLVMOrcTargetProcess PROPERTIES
-  INTERFACE_LINK_LIBRARIES "LLVMOrcShared;LLVMSupport"
+  INTERFACE_LINK_LIBRARIES "-lpthread;LLVMOrcShared;LLVMSupport"
 )
 
 # Create imported target LLVMRuntimeDyld
@@ -679,14 +679,12 @@ add_executable(llvm-profdata IMPORTED)
 
 # Create imported target bugpoint
 add_executable(bugpoint IMPORTED)
-set_property(TARGET bugpoint PROPERTY ENABLE_EXPORTS 1)
 
 # Create imported target dsymutil
 add_executable(dsymutil IMPORTED)
 
 # Create imported target llc
 add_executable(llc IMPORTED)
-set_property(TARGET llc PROPERTY ENABLE_EXPORTS 1)
 
 # Create imported target lli
 add_executable(lli IMPORTED)
@@ -799,7 +797,6 @@ add_executable(llvm-lipo IMPORTED)
 
 # Create imported target llvm-lto2
 add_executable(llvm-lto2 IMPORTED)
-set_property(TARGET llvm-lto2 PROPERTY ENABLE_EXPORTS 1)
 
 # Create imported target llvm-mc
 add_executable(llvm-mc IMPORTED)
@@ -878,7 +875,6 @@ add_executable(llvm-xray IMPORTED)
 
 # Create imported target opt
 add_executable(opt IMPORTED)
-set_property(TARGET opt PROPERTY ENABLE_EXPORTS 1)
 
 # Create imported target sancov
 add_executable(sancov IMPORTED)
